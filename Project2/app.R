@@ -323,9 +323,17 @@ ui <- dashboardPage(
         tabItem(tabName = "State_Compare",
                 
                 
+                fluidRow(
+                    
+                    
+                    column(1, checkboxInput("sync", label = "Sync", value = FALSE)),
+                    
+                    
                 
                 
-            fluidRow(
+                
+                
+            
                 column(2,
 
                selectInput("State1", h5("Choose the first State"),
@@ -342,30 +350,26 @@ ui <- dashboardPage(
 
                ),
                
-               actionButton("reset_state1", "Reset Map 1 view")
+               actionButton("reset_state1", "Reset Map 1 view"),
+               
+               checkboxGroupInput("State1Energy", 
+                                  h3("Select Energy Sources:"), 
+                                  choices = c("All" = "All", "Renewable" = "Renewable", "Nonrenewable" = "Nonrenewable", 
+                                              'Coal' = 'Coal', "Oil" = "Oil", "Gas" = "Gas",
+                                              "Nuclear" = "Nuclear" , "Hydro" = "Hydro", "Biomass" = "Biomass", "Wind" = "Wind", "Solar" = "Solar", "Other" = "Other"),
+                                  selected = "All"
+               )
                
                ),
-               column(2,  
-               checkboxGroupInput("State1Energy", 
-                                   h3("Select Energy Sources:"), 
-                                   choices = c("All" = "All", "Renewable" = "Renewable", "Nonrenewable" = "Nonrenewable", 
-                                               'Coal' = 'Coal', "Oil" = "Oil", "Gas" = "Gas",
-                                               "Nuclear" = "Nuclear" , "Hydro" = "Hydro", "Biomass" = "Biomass", "Wind" = "Wind", "Solar" = "Solar", "Other" = "Other"),
-                                   selected = "All"
-                                   )),
+
                 
-                column(2, leafletOutput("leaf_State1", height = 425, width=1000))),
+                column(4, leafletOutput("leaf_State1", height = 800, width=500)),
             
              
-            fluidRow(
-                column(1, checkboxInput("sync", label = "Sync", value = FALSE)),
-                
-                
-            ),
             
                 
-            fluidRow(
-                column(2, 
+            
+                column(1,
                        selectInput("State2",  h5("Choose the second State"),
                                    choices = state_names,
                                    selected = "Illinois",
@@ -378,19 +382,19 @@ ui <- dashboardPage(
 
 
                        ),
+
+                       actionButton("reset_state2", "Reset Map 2 view"),
                        
-                       actionButton("reset_state2", "Reset Map 2 view")
-                       ),
-                column(2, 
-                checkboxGroupInput("State2Energy", 
-                                   h3("Select Energy Sources:"), 
-                                   choices = c("All" = "All", "Renewable" = "Renewable", "Nonrenewable" = "Nonrenewable", 
+                
+                checkboxGroupInput("State2Energy",
+                                   h3("Select Energy Sources:"),
+                                   choices = c("All" = "All", "Renewable" = "Renewable", "Nonrenewable" = "Nonrenewable",
                                                'Coal' = 'Coal', "Oil" = "Oil", "Gas" = "Gas",
                                                "Nuclear" = "Nuclear" , "Hydro" = "Hydro", "Biomass" = "Biomass", "Wind" = "Wind", "Solar" = "Solar", "Other" = "Other"),
                                    selected = "All")),
-                column(2, leafletOutput("leaf_State2", height = 425, width=1000))
+                column(2, leafletOutput("leaf_State2", height = 800, width = 500))
             )
-            
+
         )
         
         
@@ -409,42 +413,42 @@ server <- function(input, output) {
     illinois_map <- leaflet(illinois_data) %>%
         addTiles() %>%  # Add default OpenStreetMap map tiles
        
-        addCircleMarkers(data = subset(illinois_data, COAL > 0),  lng=~Longitude, lat=~Latitude, group = "All", popup=~COAL, color="Red",  clusterOptions = markerClusterOptions() ) %>%
-        addCircleMarkers(data = subset(illinois_data, OIL > 0), lng=~Longitude, lat=~Latitude, group = "All", popup=~OIL, color="Blue",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, GAS > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~GAS, color="Green",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, NUCLEAR > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~NUCLEAR, color="Yellow",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, HYDRO > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~HYDRO, color="Orange",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, BIOMASS > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~BIOMASS, color="Purple",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, WIND > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~WIND, color="Cyan",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, SOLAR > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~SOLAR, color="Brown",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, GEOTHERMAL > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~GEOTHERMAL, color="Pink",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, OTHER > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~OTHER,  color="Grey",  clusterOptions = markerClusterOptions()) %>%
+        addCircleMarkers(data = subset(illinois_data, COAL > 0),  lng=~Longitude, lat=~Latitude, group = "All", popup=~COAL, color="Red") %>%
+        addCircleMarkers(data = subset(illinois_data, OIL > 0), lng=~Longitude, lat=~Latitude, group = "All", popup=~OIL, color="Blue") %>%
+        addCircleMarkers(data = subset(illinois_data, GAS > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~GAS, color="Green") %>%
+        addCircleMarkers(data = subset(illinois_data, NUCLEAR > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~NUCLEAR, color="Yellow") %>%
+        addCircleMarkers(data = subset(illinois_data, HYDRO > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~HYDRO, color="Orange") %>%
+        addCircleMarkers(data = subset(illinois_data, BIOMASS > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~BIOMASS, color="Purple") %>%
+        addCircleMarkers(data = subset(illinois_data, WIND > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~WIND, color="Cyan") %>%
+        addCircleMarkers(data = subset(illinois_data, SOLAR > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~SOLAR, color="Brown") %>%
+        addCircleMarkers(data = subset(illinois_data, GEOTHERMAL > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~GEOTHERMAL, color="Pink") %>%
+        addCircleMarkers(data = subset(illinois_data, OTHER > 0), lng=~Longitude, lat=~Latitude, group = "All", popup = ~OTHER,  color="Grey") %>%
         
         
-        addCircleMarkers(data = subset(illinois_data, HYDRO > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~HYDRO, color="Orange",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, BIOMASS > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~BIOMASS, color="Purple",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, WIND > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~WIND, color="Cyan",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, SOLAR > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~SOLAR, color="Brown",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, GEOTHERMAL > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~GEOTHERMAL, color="Pink",  clusterOptions = markerClusterOptions()) %>%
+        addCircleMarkers(data = subset(illinois_data, HYDRO > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~HYDRO, color="Orange") %>%
+        addCircleMarkers(data = subset(illinois_data, BIOMASS > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~BIOMASS, color="Purple") %>%
+        addCircleMarkers(data = subset(illinois_data, WIND > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~WIND, color="Cyan") %>%
+        addCircleMarkers(data = subset(illinois_data, SOLAR > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~SOLAR, color="Brown") %>%
+        addCircleMarkers(data = subset(illinois_data, GEOTHERMAL > 0), lng=~Longitude, lat=~Latitude, group = "Renewable", popup = ~GEOTHERMAL, color="Pink") %>%
         
         
-        addCircleMarkers(data = subset(illinois_data, COAL > 0),  lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup=~COAL, color="Red",  clusterOptions = markerClusterOptions() ) %>%
-        addCircleMarkers(data = subset(illinois_data, OIL > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup=~OIL, color="Blue",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, GAS > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup = ~GAS, color="Green",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, NUCLEAR > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup = ~NUCLEAR, color="Yellow",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, OTHER > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup = ~OTHER,  color="Grey",  clusterOptions = markerClusterOptions()) %>%
+        addCircleMarkers(data = subset(illinois_data, COAL > 0),  lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup=~COAL, color="Red" ) %>%
+        addCircleMarkers(data = subset(illinois_data, OIL > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup=~OIL, color="Blue") %>%
+        addCircleMarkers(data = subset(illinois_data, GAS > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup = ~GAS, color="Green") %>%
+        addCircleMarkers(data = subset(illinois_data, NUCLEAR > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup = ~NUCLEAR, color="Yellow") %>%
+        addCircleMarkers(data = subset(illinois_data, OTHER > 0), lng=~Longitude, lat=~Latitude, group = "Nonrenewable", popup = ~OTHER,  color="Grey") %>%
         
         
-        addCircleMarkers(data = subset(illinois_data, COAL > 0),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=~COAL, color="Red",  clusterOptions = markerClusterOptions() ) %>%
-        addCircleMarkers(data = subset(illinois_data, OIL > 0), lng=~Longitude, lat=~Latitude, group = "OIL", popup=~OIL, color="Blue",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, GAS > 0), lng=~Longitude, lat=~Latitude, group = "GAS", popup = ~GAS, color="Green",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, NUCLEAR > 0), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup = ~NUCLEAR, color="Yellow",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, HYDRO > 0), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup = ~HYDRO, color="Orange",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, BIOMASS > 0), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup = ~BIOMASS, color="Purple",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, WIND > 0), lng=~Longitude, lat=~Latitude, group = "WIND", popup = ~WIND, color="Cyan",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, SOLAR > 0), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup = ~SOLAR, color="Brown",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, GEOTHERMAL > 0), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup = ~GEOTHERMAL, color="Pink",  clusterOptions = markerClusterOptions()) %>%
-        addCircleMarkers(data = subset(illinois_data, OTHER > 0), lng=~Longitude, lat=~Latitude, group = "OTHER", popup = ~OTHER,  color="Grey",  clusterOptions = markerClusterOptions()) %>%
+        addCircleMarkers(data = subset(illinois_data, COAL > 0),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=~COAL, color="Red" ) %>%
+        addCircleMarkers(data = subset(illinois_data, OIL > 0), lng=~Longitude, lat=~Latitude, group = "OIL", popup=~OIL, color="Blue") %>%
+        addCircleMarkers(data = subset(illinois_data, GAS > 0), lng=~Longitude, lat=~Latitude, group = "GAS", popup = ~GAS, color="Green") %>%
+        addCircleMarkers(data = subset(illinois_data, NUCLEAR > 0), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup = ~NUCLEAR, color="Yellow") %>%
+        addCircleMarkers(data = subset(illinois_data, HYDRO > 0), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup = ~HYDRO, color="Orange") %>%
+        addCircleMarkers(data = subset(illinois_data, BIOMASS > 0), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup = ~BIOMASS, color="Purple") %>%
+        addCircleMarkers(data = subset(illinois_data, WIND > 0), lng=~Longitude, lat=~Latitude, group = "WIND", popup = ~WIND, color="Cyan") %>%
+        addCircleMarkers(data = subset(illinois_data, SOLAR > 0), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup = ~SOLAR, color="Brown") %>%
+        addCircleMarkers(data = subset(illinois_data, GEOTHERMAL > 0), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup = ~GEOTHERMAL, color="Pink") %>%
+        addCircleMarkers(data = subset(illinois_data, OTHER > 0), lng=~Longitude, lat=~Latitude, group = "OTHER", popup = ~OTHER,  color="Grey") %>%
         
         addLegend("bottomright", colors = c("#FF0000", "#0000FF","#00FF00", "#FFFF00", "#FFa500", "#800080", "#00FFFF", "#FF0000", "#964B00", "#808080"), 
                   labels=c("Coal", "Oil", "Gas", "Nuclear", "Hydro", "Biomass", "Wind", "Solar", "Geothermal", "Other"), title="Energy Source") %>%
@@ -465,12 +469,12 @@ server <- function(input, output) {
         illinois_map
     })
     
-    
+
     output$leaf_State2 <- renderLeaflet({
         illinois_map
     })
-    
-    
+
+
     
     observe({
         input$reset_button
