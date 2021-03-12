@@ -427,7 +427,48 @@ ui <- dashboardPage(
                                                "Nuclear" = "Nuclear" , "Hydro" = "Hydro", "Biomass" = "Biomass", "Wind" = "Wind", "Solar" = "Solar", "Other" = "Other"))),
                 column(2, leafletOutput("leaf_State2", height = 800, width = 560))
             ),
-            fluidRow(column(1, padding=6, checkboxInput("Sync", label = "Sync", value = FALSE)))
+            fluidRow(column(1, padding=6, checkboxInput("Sync", label = "Sync", value = FALSE))),
+            
+            # tabItem(tabName = "Country_compare",
+            #         
+            #         fluidRow(
+            #             
+            #             column(10, offset=1,
+            #                    checkboxGroupInput("Illinois_Energy", 
+            #                                       h3("Select Energy Sources:"), 
+            #                                       choices = c("All" = "All", "Renewable" = "Renewable", "Nonrenewable" = "Nonrenewable", 
+            #                                                   'Coal' = 'Coal', "Oil" = "Oil", "Gas" = "Gas",
+            #                                                   "Nuclear" = "Nuclear" , "Hydro" = "Hydro", "Biomass" = "Biomass", "Wind" = "Wind", "Solar" = "Solar", "Geothermal" = "Geothermal", "Other" = "Other"),
+            #                                       selected = "All", 
+            #                                       inline = TRUE
+            #                    )),
+            #             
+            #             column(1,
+            #                    actionButton("reset_button_first_page", "Reset view")),
+            #             
+            #             column(2,
+            #                    
+            #                    selectInput("State1", h5("Choose the first State"),
+            #                                choices = state_names,
+            #                                selected = "Illinois",
+            #                                
+            #                                
+            #                                
+            #                    )),
+            #             column(2,
+            #                    selectInput("StateYear1", h5("Choose the year for the first State"),
+            #                                choices = c(2000, 2010, 2018),
+            #                                selected = 2000,
+            #                                
+            #                                
+            #                    )),
+            #             
+            #         
+            #         ), 
+            #         
+            #         leafletOutput("leaf_USA", height = 800),
+            #         
+            #         )
 
         )
         
@@ -657,46 +698,25 @@ server <- function(input, output, session) {
             ) %>%
             
             
-            # addCircleMarkers(data = subset(state1_data, COAL > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Coal" %in% input$State1Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(illinois_data, COAL > 0), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/200)*100 ) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, OIL > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Oil" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(illinois_data, OIL > 0), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, GAS > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Gas" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(illinois_data, GAS > 0), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, NUCLEAR > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Nuclear" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(illinois_data, NUCLEAR > 0), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, HYDRO > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Hydro" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(illinois_data, HYDRO > 0), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, BIOMASS > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Biomass" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(illinois_data, BIOMASS > 0), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, WIND > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Wind" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(illinois_data, WIND > 0), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, SOLAR > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Solar" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(illinois_data, SOLAR > 0), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, GEOTHERMAL > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Geothermal" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(illinois_data, GEOTHERMAL > 0), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/200)*100) %>%
-            # 
-            # addCircleMarkers(data = subset(state1_data, OTHER > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Other" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(illinois_data, OTHER > 0), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/200)*100) %>%
-        
-    
-            addCircles(data = subset(state1_data, COAL > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Coal" %in% input$State1Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(illinois_data, COAL > 0), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/100)*125) %>%
+            addCircles(data = subset(state1_data, COAL > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Coal" %in% input$State1Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(illinois_data, COAL > 0), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/100)*125 , weight = 1) %>%
             
-            addCircles(data = subset(state1_data, OIL > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Oil" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(illinois_data, OIL > 0), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/100)*125) %>%
+            addCircles(data = subset(state1_data, OIL > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Oil" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(illinois_data, OIL > 0), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, GAS > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Gas" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(illinois_data, GAS > 0), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/100)*125) %>%
+            addCircles(data = subset(state1_data, GAS > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Gas" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(illinois_data, GAS > 0), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, NUCLEAR > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Nuclear" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(illinois_data, NUCLEAR > 0), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/100)*125) %>%
+            addCircles(data = subset(state1_data, NUCLEAR > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Nuclear" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(illinois_data, NUCLEAR > 0), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, HYDRO > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Hydro" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(illinois_data, HYDRO > 0), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/100)*125) %>%
+            addCircles(data = subset(state1_data, HYDRO > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Hydro" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(illinois_data, HYDRO > 0), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, BIOMASS > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Biomass" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(illinois_data, BIOMASS > 0), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/100)*125) %>%
+            addCircles(data = subset(state1_data, BIOMASS > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Biomass" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(illinois_data, BIOMASS > 0), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, WIND > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Wind" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(illinois_data, WIND > 0), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/100)*125) %>%
+            addCircles(data = subset(state1_data, WIND > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Wind" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(illinois_data, WIND > 0), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, SOLAR > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Solar" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(illinois_data, SOLAR > 0), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/100)*125) %>%
+            addCircles(data = subset(state1_data, SOLAR > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Solar" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(illinois_data, SOLAR > 0), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, GEOTHERMAL > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Geothermal" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(illinois_data, GEOTHERMAL > 0), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/100)*125) %>%
+            addCircles(data = subset(state1_data, GEOTHERMAL > 0 & ("All" %in% input$State1Energy | "Renewable" %in% input$State1Energy | "Geothermal" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(illinois_data, GEOTHERMAL > 0), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state1_data, OTHER > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Other" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(illinois_data, OTHER > 0), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/100)*125) %>%
+            addCircles(data = subset(state1_data, OTHER > 0 & ("All" %in% input$State1Energy | "Nonrenewable" %in% input$State1Energy | "Other" %in% input$State1Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(illinois_data, OTHER > 0), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/100)*125, weight = 1) %>%
             
             addLegend("bottomright", colors = c("#FF0000", "#0000FF","#00FF00", "#FFFF00", "#FFa500", "#800080", "#00FFFF", "#FF0000", "#964B00", "#808080"), 
                       labels=c("Coal", "Oil", "Gas", "Nuclear", "Hydro", "Biomass", "Wind", "Solar", "Geothermal", "Other"), title="Energy Source") %>%
@@ -760,25 +780,25 @@ server <- function(input, output, session) {
             ) %>%
             
             
-            addCircles(data = subset(state2_data, COAL > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Coal" %in% input$State2Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(illinois_data, COAL > 0), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/100)*125) %>%
+            addCircles(data = subset(state2_data, COAL > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Coal" %in% input$State2Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(illinois_data, COAL > 0), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, OIL > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Oil" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(illinois_data, OIL > 0), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/100)*125) %>%
+            addCircles(data = subset(state2_data, OIL > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Oil" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(illinois_data, OIL > 0), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, GAS > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Gas" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(illinois_data, GAS > 0), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/100)*125) %>%
+            addCircles(data = subset(state2_data, GAS > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Gas" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(illinois_data, GAS > 0), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, NUCLEAR > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Nuclear" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(illinois_data, NUCLEAR > 0), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/100)*125) %>%
+            addCircles(data = subset(state2_data, NUCLEAR > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Nuclear" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(illinois_data, NUCLEAR > 0), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, HYDRO > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Hydro" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(illinois_data, HYDRO > 0), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/100)*125) %>%
+            addCircles(data = subset(state2_data, HYDRO > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Hydro" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(illinois_data, HYDRO > 0), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, BIOMASS > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Biomass" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(illinois_data, BIOMASS > 0), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/100)*125) %>%
+            addCircles(data = subset(state2_data, BIOMASS > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Biomass" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(illinois_data, BIOMASS > 0), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, WIND > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Wind" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(illinois_data, WIND > 0), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/100)*125) %>%
+            addCircles(data = subset(state2_data, WIND > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Wind" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(illinois_data, WIND > 0), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, SOLAR > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Solar" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(illinois_data, SOLAR > 0), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/100)*125) %>%
+            addCircles(data = subset(state2_data, SOLAR > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Solar" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(illinois_data, SOLAR > 0), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, GEOTHERMAL > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Geothermal" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(illinois_data, GEOTHERMAL > 0), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/100)*125) %>%
+            addCircles(data = subset(state2_data, GEOTHERMAL > 0 & ("All" %in% input$State2Energy | "Renewable" %in% input$State2Energy | "Geothermal" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(illinois_data, GEOTHERMAL > 0), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(state2_data, OTHER > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Other" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(illinois_data, OTHER > 0), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/100)*125) %>%
+            addCircles(data = subset(state2_data, OTHER > 0 & ("All" %in% input$State2Energy | "Nonrenewable" %in% input$State2Energy | "Other" %in% input$State2Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(illinois_data, OTHER > 0), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/100)*125, weight = 1) %>%
             
             addLegend("bottomright", colors = c("#FF0000", "#0000FF","#00FF00", "#FFFF00", "#FFa500", "#800080", "#00FFFF", "#FF0000", "#964B00", "#808080"), 
                       labels=c("Coal", "Oil", "Gas", "Nuclear", "Hydro", "Biomass", "Wind", "Solar", "Geothermal", "Other"), title="Energy Source") %>%
