@@ -1,0 +1,32 @@
+{
+    "id": "9AAC0F70",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1615261733254.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "expression": "X2018_plant_data_simplified",
+        "caption": "X2018_plant_data_simplified",
+        "totalObservations": 10965,
+        "displayedObservations": 10965,
+        "variables": 15,
+        "cacheKey": "AD404A07",
+        "object": "X2018_plant_data_simplified",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=X2018_plant_data_simplified&cache_key=AD404A07&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 7306045242770420585,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615261733254,
+    "read_only": false,
+    "read_only_alternatives": []
+}
