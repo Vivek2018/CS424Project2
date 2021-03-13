@@ -357,7 +357,7 @@ ui <- dashboardPage(
                           )),
                           
                         column(1,
-                               actionButton("reset_button_first_page", "Reset view"))
+                               actionButton("reset_button_first_page", "Reset View"))
                         
                     ),
                     
@@ -444,8 +444,12 @@ ui <- dashboardPage(
                                                   inline = TRUE
                                )),
 
+                        column(1),
+                        
                         column(1,
-                               actionButton("resetUSA)", "Reset view")),
+                               actionButton("backup", "Reset View"))
+                        
+                        ,
 
                    
                         column(2, offset=1,
@@ -457,21 +461,23 @@ ui <- dashboardPage(
                                )),
                         
                         column(2,
-                               sliderInput("smallPlants", "Lower Range:", 
+                               sliderInput("smallPlants", "Lower Range (MWh):", 
                                        min = 0, max = (31097259/2 - 1),
-                                       value = c(0, (31097259/2 - 1))
+                                       value = c(0, (31097259/2 - 1)),
+                                       width = 400
                                )), 
                         
                         column(2,
-                               sliderInput("largePlants", "Max Range:", 
+                               sliderInput("largePlants", "Max Range (MWh):", 
                                            min = (31097259/2), max = 31097260,
-                                           value = c((31097259/2),31097260))
+                                           value = c((31097259/2),31097260),
+                                            width = 400)
                                )
 
 
                     ),
 
-                    leafletOutput("leaf_USA", height = 600),
+                    leafletOutput("leaf_USA", height = 700),
 
                     )
 
@@ -831,11 +837,12 @@ server <- function(input, output, session) {
         
     })
     
+    usa_lng = -103
+    usa_lat = 44
+    usa_zoom = 4
     
     observe({
-        usa_lng = -103
-        usa_lat = 44
-        usa_zoom = 4
+        
         
         usa_data <- total_data2018
         if (input$usaYear == 2018) {
@@ -873,25 +880,25 @@ server <- function(input, output, session) {
             
             
             
-            addCircles(data = subset(usa_data, ((COAL <= input$largePlants[2] & COAL >= input$largePlants[1]) | (COAL <= input$smallPlants[2] & COAL >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Coal" %in% input$usa_Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(usa_data, ((COAL <= input$largePlants[2] & COAL >= input$largePlants[1]) | (COAL <= input$smallPlants[2] & COAL >= input$smallPlants[1]))), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((COAL <= input$largePlants[2] & COAL >= input$largePlants[1]) | (COAL <= input$smallPlants[2] & COAL > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Coal" %in% input$usa_Energy)),  lng=~Longitude, lat=~Latitude, group = "COAL", popup=get_plant_popup(subset(usa_data, ((COAL <= input$largePlants[2] & COAL >= input$largePlants[1]) | (COAL <= input$smallPlants[2] & COAL > input$smallPlants[1]))), "COAL"), color="Red", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(COAL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((OIL <= input$largePlants[2] & OIL >= input$largePlants[1]) | (OIL <= input$smallPlants[2] & OIL >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Oil" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(usa_data, ((OIL <= input$largePlants[2] & OIL >= input$largePlants[1]) | (OIL <= input$smallPlants[2] & OIL >= input$smallPlants[1]))), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((OIL <= input$largePlants[2] & OIL >= input$largePlants[1]) | (OIL <= input$smallPlants[2] & OIL > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Oil" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "OIL", popup=get_plant_popup(subset(usa_data, ((OIL <= input$largePlants[2] & OIL >= input$largePlants[1]) | (OIL <= input$smallPlants[2] & OIL > input$smallPlants[1]))), "OIL"), color="Blue", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OIL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data,((GAS <= input$largePlants[2] & GAS >= input$largePlants[1]) | (GAS <= input$smallPlants[2] & GAS >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Gas" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(usa_data, ((GAS <= input$largePlants[2] & GAS >= input$largePlants[1]) | (GAS <= input$smallPlants[2] & GAS >= input$smallPlants[1]))), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data,((GAS <= input$largePlants[2] & GAS >= input$largePlants[1]) | (GAS <= input$smallPlants[2] & GAS > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Gas" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "GAS", popup=get_plant_popup(subset(usa_data, ((GAS <= input$largePlants[2] & GAS >= input$largePlants[1]) | (GAS <= input$smallPlants[2] & GAS > input$smallPlants[1]))), "GAS"), color="Green", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GAS/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((NUCLEAR <= input$largePlants[2] & NUCLEAR >= input$largePlants[1]) | (NUCLEAR <= input$smallPlants[2] & NUCLEAR >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Nuclear" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(usa_data, ((NUCLEAR <= input$largePlants[2] & NUCLEAR >= input$largePlants[1]) | (NUCLEAR <= input$smallPlants[2] & NUCLEAR >= input$smallPlants[1]))), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((NUCLEAR <= input$largePlants[2] & NUCLEAR >= input$largePlants[1]) | (NUCLEAR <= input$smallPlants[2] & NUCLEAR > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Nuclear" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "NUCLEAR", popup=get_plant_popup(subset(usa_data, ((NUCLEAR <= input$largePlants[2] & NUCLEAR >= input$largePlants[1]) | (NUCLEAR <= input$smallPlants[2] & NUCLEAR > input$smallPlants[1]))), "NUCLEAR"), color="Yellow", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(NUCLEAR/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((HYDRO <= input$largePlants[2] & HYDRO >= input$largePlants[1]) | (HYDRO <= input$smallPlants[2] & HYDRO >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Hydro" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(usa_data, ((HYDRO <= input$largePlants[2] & HYDRO >= input$largePlants[1]) | (HYDRO <= input$smallPlants[2] & HYDRO >= input$smallPlants[1]))), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((HYDRO <= input$largePlants[2] & HYDRO >= input$largePlants[1]) | (HYDRO <= input$smallPlants[2] & HYDRO > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Hydro" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "HYDRO", popup=get_plant_popup(subset(usa_data, ((HYDRO <= input$largePlants[2] & HYDRO >= input$largePlants[1]) | (HYDRO <= input$smallPlants[2] & HYDRO > input$smallPlants[1]))), "HYDRO"), color="Orange", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(HYDRO/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((BIOMASS <= input$largePlants[2] & BIOMASS >= input$largePlants[1]) | (BIOMASS <= input$smallPlants[2] & BIOMASS >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Biomass" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(usa_data, ((BIOMASS <= input$largePlants[2] & BIOMASS >= input$largePlants[1]) | (BIOMASS <= input$smallPlants[2] & BIOMASS >= input$smallPlants[1]))), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((BIOMASS <= input$largePlants[2] & BIOMASS >= input$largePlants[1]) | (BIOMASS <= input$smallPlants[2] & BIOMASS > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Biomass" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "BIOMASS", popup=get_plant_popup(subset(usa_data, ((BIOMASS <= input$largePlants[2] & BIOMASS >= input$largePlants[1]) | (BIOMASS <= input$smallPlants[2] & BIOMASS > input$smallPlants[1]))), "BIOMASS"), color="Purple", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(BIOMASS/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Wind" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND >= input$smallPlants[1]))), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Wind" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "WIND", popup=get_plant_popup(subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND > input$smallPlants[1]))), "WIND"), color="Cyan", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(WIND/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Solar" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND >= input$smallPlants[1]))), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Solar" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "SOLAR", popup=get_plant_popup(subset(usa_data, ((WIND <= input$largePlants[2] & WIND >= input$largePlants[1]) | (WIND <= input$smallPlants[2] & WIND > input$smallPlants[1]))), "SOLAR"), color="Brown", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(SOLAR/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((GEOTHERMAL <= input$largePlants[2] & GEOTHERMAL >= input$largePlants[1]) | (GEOTHERMAL <= input$smallPlants[2] & GEOTHERMAL >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Geothermal" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(usa_data, ((GEOTHERMAL <= input$largePlants[2] & GEOTHERMAL >= input$largePlants[1]) | (GEOTHERMAL <= input$smallPlants[2] & GEOTHERMAL >= input$smallPlants[1]))), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((GEOTHERMAL <= input$largePlants[2] & GEOTHERMAL >= input$largePlants[1]) | (GEOTHERMAL <= input$smallPlants[2] & GEOTHERMAL > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Renewable" %in% input$usa_Energy | "Geothermal" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "GEOTHERMAL", popup=get_plant_popup(subset(usa_data, ((GEOTHERMAL <= input$largePlants[2] & GEOTHERMAL >= input$largePlants[1]) | (GEOTHERMAL <= input$smallPlants[2] & GEOTHERMAL > input$smallPlants[1]))), "GEOTHERMAL"), color="Pink", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(GEOTHERMAL/100)*125, weight = 1) %>%
             
-            addCircles(data = subset(usa_data, ((OTHER <= input$largePlants[2] & OTHER >= input$largePlants[1]) | (OTHER <= input$smallPlants[2] & OTHER >= input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Other" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(usa_data, ((OTHER <= input$largePlants[2] & OTHER >= input$largePlants[1]) | (OTHER <= input$smallPlants[2] & OTHER >= input$smallPlants[1]))), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/100)*125, weight = 1) %>%
+            addCircles(data = subset(usa_data, ((OTHER <= input$largePlants[2] & OTHER >= input$largePlants[1]) | (OTHER <= input$smallPlants[2] & OTHER > input$smallPlants[1])) & ("All" %in% input$usa_Energy | "Nonrenewable" %in% input$usa_Energy | "Other" %in% input$usa_Energy)), lng=~Longitude, lat=~Latitude, group = "OTHER", popup=get_plant_popup(subset(usa_data, ((OTHER <= input$largePlants[2] & OTHER >= input$largePlants[1]) | (OTHER <= input$smallPlants[2] & OTHER > input$smallPlants[1]))), "OTHER"),  color="Grey", fillOpacity = 0.3, stroke = FALSE, radius = ~sqrt(OTHER/100)*125, weight = 1) %>%
             
             addLegend("bottomright", colors = c("#FF0000", "#0000FF","#00FF00", "#FFFF00", "#FFa500", "#800080", "#00FFFF", "#FF0000", "#964B00", "#808080"), 
                       labels=c("Coal", "Oil", "Gas", "Nuclear", "Hydro", "Biomass", "Wind", "Solar", "Geothermal", "Other"), title="Energy Source") %>%
@@ -905,16 +912,29 @@ server <- function(input, output, session) {
         output$leaf_USA <- renderLeaflet({
             usa_map
         })
-    
         
-        observe({
-            input$resetUSA
-            leafletProxy("leaf_USA") %>% setView(lat = usa_lat, lng = usa_lng, zoom = usa_zoom)
-        })
+        # observe({
+        #     input$reset_usa
+        #     leafletProxy("leaf_USA") %>% setView(lng = usa_lng, lat = usa_lng, zoom = usa_zoom)
+        # })
+        
+        # observe({
+        #     input$reset_usa
+        #     leafletProxy("leaf_USA") %>% setView(lat = usa_lat, lng = usa_lng, zoom = usa_zoom)
+        # })
         
     })
 
-
+    
+    # observe({
+    #     input$reset_usa
+    #     leafletProxy("leaf_USA") %>% setView(lat = usa_lat, lng = usa_lng, zoom = usa_zoom)
+    # })
+    
+    observe({
+        input$backup
+        leafletProxy("leaf_USA") %>% setView(lat = usa_lat, lng = usa_lng, zoom = usa_zoom)
+    })
     
     
 }
